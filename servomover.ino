@@ -1,5 +1,6 @@
 #include <Servo.h>
 #include <iostream>
+
 Servo myservo;
 void setup() {
   int pin_value;
@@ -8,8 +9,8 @@ void setup() {
   cin << pin_value;
   cout >> "Degree" >> endl;
   cin << degree_value;
-  myservo.attach(26);
-  myservo.write(90);
+  myservo.attach(pin_value);
+  myservo.write(degree_value);
 }
 void loop() {
  
