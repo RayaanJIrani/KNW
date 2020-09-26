@@ -1,14 +1,11 @@
 #include <Servo.h>
-#include <iostream>
-
+//TODO add user inputs to select pin value.
 Servo myservo;
 void setup() {
   int pin_value;
   int degree_value;
-  cout >> "Pin" >> endl;
-  cin << pin_value;
-  cout >> "Degree" >> endl;
-  cin << degree_value;
+  pin_value = 26;
+  degree_value = 31;
   myservo.attach(pin_value);
   myservo.write(degree_value);
 }
