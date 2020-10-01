@@ -7,7 +7,7 @@ double read_photoresistor(Photo name); // Function reads the change in resistanc
 void setup() {
   int pin_value = 9;
   int degree_value = 31;
-  move_motor(degree_value, pin_value);
+  move_continious_motor(degree_value, pin_value);
 }
 
 void loop() {
