@@ -1,8 +1,13 @@
 #include <Servo.h>
 #define Photo A5; // Sets the input sensor for the photoresistor as analog 5 (do not change)
 Servo myservo; // Arduinio IO port hook up 
+
+
+
 void move_continious_motor (int degrees); // Function moves the location n degrees counterclockwise
 double read_photoresistor(Photo name); // Function reads the change in resistance caused by the presence of light
+
+
 
 void setup() {
   int pin_value = 9;
