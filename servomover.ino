@@ -11,7 +11,7 @@ double read_photoresistor(); // Function reads the change in resistance caused b
 
 void setup() {
   int rot_pin_value = 9;
-  int log_pin_value = 8;
+  int log_pin_value = 11;
   int rot_degree_value = 31;
   int log_degree_value = 100;
   move_continious_motor(rot_degree_value, rot_pin_value);
