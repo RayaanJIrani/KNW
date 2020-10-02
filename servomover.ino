@@ -15,7 +15,7 @@ void setup() {
   int rot_degree_value = 31;
   int log_degree_value = 100;
   move_continious_motor(rot_degree_value, rot_pin_value);
-  move_analog_motor(rot_degree_value, log_pin_value);
+  move_analog_motor(log_degree_value, log_pin_value);
 }
 
 void loop() {
