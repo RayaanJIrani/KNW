@@ -15,7 +15,7 @@ void setup() {
   int rot_degree_value = 31;
   int log_degree_value = 100;
   move_continious_motor(rot_degree_value, rot_pin_value);
-  move_analog_motor(degree_value, log_pin_value);
+  move_analog_motor(rot_degree_value, log_pin_value);
 }
 
 void loop() {
@@ -30,7 +30,7 @@ void move_continious_motor (int degrees, int pin){
   double end_time = marginal_run_time * degrees + time_start; // This calculates when the program should end 
   
   while (millis() <= end_time){ // If program should be running it will run
-      myservo.write(180); //move servo as fast as possible
+      rot_servo.write(180); //move servo as fast as possible
   }
   
 } 
@@ -45,3 +45,7 @@ void move_continious_motor (int degrees, int pin){
     Serial.print("\n");
     return light_level;
  }
+  
+
+
+ 
