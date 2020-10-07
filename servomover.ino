@@ -46,14 +46,16 @@ void move_continious_motor (int degrees, int pin){
     log_servo.write(degrees);
 }
   
-  int read_photoresitor(){
-    int light_level = analogRead(A5);
-    Serial.print(light_level);
+  double read_photoresitor(){
+    double light_level = analogRead(A5);
+    double voltage = light_level * (5/1024); // converts analog to voltage
+    Serial.print(voltage);
     Serial.print("\n");
     return light_level;
  }
 double read_solar(){
     double solar = analogRead(A6);
+    double voltage = solar * (5/1024); // converts analog to voltage
     Serial.print(solar);
     Serial.print("\n");
     return solar;
@@ -70,4 +72,5 @@ double read_solar(){
  int myCalibrationFunction(int raw){
     return raw;
  }
+  
  
