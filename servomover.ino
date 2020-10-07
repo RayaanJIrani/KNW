@@ -57,13 +57,12 @@ void move_continious_motor (int degrees, int pin){
     return solar;
  }
 
- double read_salinity(){
-  double salinity1 = analogRead(A2);
-  double salinity2 = analogRead(A3);
-  Serial.print(salinity1);
-  Serial.print("\n");
-  Serial.print(salinity2);
-  Serial.print("\n");
+ void read_salinity(){
+  int conductivityReading = getConductivity();
+  int salinity = myCalibrationFunction(conductivityReading);
+  Serial.println("Salinity Reading:");
+  Serial.println(salinity);
+ 
  }
   
 
