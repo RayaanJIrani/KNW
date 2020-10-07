@@ -1,7 +1,7 @@
 #include <Servo.h>
 #include <conductivity.h>
 #define Salinity1 A2;
-#definie Salinity2 A3;
+#define Salinity2 A3;
 #define Photo A5; // Sets the input sensor for the photoresistor as analog 5 (do not change)
 #define Solar A6;
 Servo rot_servo; // Arduinio IO port hook up 
@@ -10,7 +10,9 @@ Servo log_servo;
 
 void move_continious_motor (int degrees = 0, int pin = 9); // Function moves the location n degrees counterclockwise
 double read_photoresistor(); // Function reads the change in resistance caused by the presence of light
-
+double read_solar();
+void read_salinity();
+int myCalibrationFunction(int raw);
 
 
 void setup() {
@@ -50,7 +52,7 @@ void move_continious_motor (int degrees, int pin){
     Serial.print("\n");
     return light_level;
  }
-   double read_solar(){
+double read_solar(){
     double solar = analogRead(A6);
     Serial.print(solar);
     Serial.print("\n");
@@ -64,7 +66,8 @@ void move_continious_motor (int degrees, int pin){
   Serial.println(salinity);
  
  }
-  
 
-
+ int myCalibrationFunction(int raw){
+    return raw;
+ }
  
