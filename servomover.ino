@@ -1,5 +1,8 @@
 #include <Servo.h>
+#define Salinity A2;
+#definie Salinity A3;
 #define Photo A5; // Sets the input sensor for the photoresistor as analog 5 (do not change)
+#define Solar A6;
 Servo rot_servo; // Arduinio IO port hook up 
 Servo log_servo; 
 
@@ -10,8 +13,9 @@ double read_photoresistor(); // Function reads the change in resistance caused b
 
 
 void setup() {
+  Serial.begin(9600); // This starts the Serial port allowing Octopus have a IO stream with laptop.
   int rot_pin_value = 9;
-  int log_pin_value = 11;
+  int log_pin_value = 10; // pin changed from 11 to 10 to reflect change in hardware port usage.
   int rot_degree_value = 31;
   int log_degree_value = 100;
   move_continious_motor(rot_degree_value, rot_pin_value);
