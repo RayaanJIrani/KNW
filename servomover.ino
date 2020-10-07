@@ -1,4 +1,5 @@
 #include <Servo.h>
+#include <conductivity.h>
 #define Salinity1 A2;
 #definie Salinity2 A3;
 #define Photo A5; // Sets the input sensor for the photoresistor as analog 5 (do not change)
