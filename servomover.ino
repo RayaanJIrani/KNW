@@ -1,6 +1,6 @@
 #include <Servo.h>
-#define Salinity A2;
-#definie Salinity A3;
+#define Salinity1 A2;
+#definie Salinity2 A3;
 #define Photo A5; // Sets the input sensor for the photoresistor as analog 5 (do not change)
 #define Solar A6;
 Servo rot_servo; // Arduinio IO port hook up 
