@@ -70,7 +70,7 @@ double read_solar(){
  }
 
  int myCalibrationFunction(int raw){
-    return raw;
+    return 5 * raw / 1023;
  }
   
  
