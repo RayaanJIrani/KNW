@@ -26,6 +26,25 @@ void setup() {
 }
 
 void loop() {
+  Serial.print("Photoresistor value");
+  read_photoresitor();
+  read_photoresitor();
+  read_photoresitor();
+  delay(1000);
+  Serial.print("Solar Value");
+  read_solar();
+  read_solar();
+  read_solar();
+  read_solar();
+  read_solar();
+  delay(1000);
+  Serial.print("Salinity Reading");
+  read_salinity();
+  read_salinity();
+  read_salinity();
+  read_salinity();
+  read_salinity();
+  delay(1000);
  
 }  
 
