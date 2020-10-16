@@ -4,12 +4,10 @@
 Servo rot_servo; // Arduinio IO port hook up 
 Servo log_servo; 
 
-
+void move_analog_motor(log_degree_value, log_pin_value);
 void move_continious_motor (int degrees = 0, int pin = 9); // Function moves the location n degrees counterclockwise
 double read_photoresistor(); // Function reads the change in resistance caused by the presence of light
 double read_solar();
-void read_salinity();
-int myCalibrationFunction(int raw);
 
 
 void setup() {
