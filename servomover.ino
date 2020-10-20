@@ -13,6 +13,9 @@ double read_photoresistor(); // Function reads the change in resistance caused b
 double read_solar();
 void read_salinity();
 int myCalibrationFunction(int raw);
+int log_sunlight_track(int log_degree_value, int pin =9);
+int cont_sunlight_track(int rot_degree_value, int pin=9);
+
 
 
 void setup() {
@@ -23,6 +26,13 @@ void setup() {
   int log_degree_value = 100;
   move_continious_motor(rot_degree_value, rot_pin_value);
   move_analog_motor(log_degree_value, log_pin_value);
+  int curDeg = sunlight_track(log_degree_value, 9);
+  for(int i = 0; i <= 5; i++){
+   curDeg = cont_sunlight_track(curDeg, 9);
+  }
+   int curDeg2 cont_sunlight_track(rot_degree_value, 9);
+  for(int i = 0; i<= 5; i++){
+   curDeg2 = cont_sunlight_track(curDeg2, 9);
 }
 
 void loop() {
@@ -73,5 +83,35 @@ double read_solar(){
     return raw; // holder 
    
  }
+
+ int log_sunlight_track(int curDeg, int pin){
+  double beforevoltage = read_photoresistor();
+  move_analog_motor(curDeg + 1, pin);
+  delay(1000);
+            double afterevoltage = read_photoresistor();
+  while(aftervoltage > beforevoltage){
+    beforevoltage = read_photoresistor();
+    nove_analog_motor(curDeg-1, pin);
+    delay(1000);
+    aftereoltage = read_photoresistor();
+    return curDeg -1 ;
+                                    }
+return curDeg + 1;
   
+}
+ int cont_sunlight_track(int curDeg, int pin){
+  double beforevoltage = read_photoresistor();
+  move_continious_motor(curDeg + 1, pin);
+  delay(1000);
+            double afterevoltage = read_photoresistor();
+  while(aftervoltage > beforevoltage){
+    beforevoltage = read_photoresistor();
+    nove_continious_motor(curDeg-1, pin);
+    delay(1000);
+    aftereoltage = read_photoresistor();
+    return curDeg -1 ;
+                                    }
+return curDeg + 1;
+  
+}  
  
