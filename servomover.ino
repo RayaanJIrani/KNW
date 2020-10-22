@@ -84,34 +84,17 @@ double read_solar(){
    
  }
 
- int log_sunlight_track(int curDeg, int pin){
-  double beforevoltage = read_photoresistor();
-  move_analog_motor(curDeg + 1, pin);
-  delay(1000);
-            double afterevoltage = read_photoresistor();
-  while(aftervoltage > beforevoltage){
-    beforevoltage = read_photoresistor();
-    nove_analog_motor(curDeg-1, pin);
-    delay(1000);
-    aftereoltage = read_photoresistor();
-    return curDeg -1 ;
-                                    }
-return curDeg + 1;
-  
-}
- int cont_sunlight_track(int curDeg, int pin){
-  double beforevoltage = read_photoresistor();
-  move_continious_motor(curDeg + 1, pin);
-  delay(1000);
-            double afterevoltage = read_photoresistor();
-  while(aftervoltage > beforevoltage){
-    beforevoltage = read_photoresistor();
-    nove_continious_motor(curDeg-1, pin);
-    delay(1000);
-    aftereoltage = read_photoresistor();
-    return curDeg -1 ;
-                                    }
-return curDeg + 1;
-  
-}  
- 
+ void sunlight_track(){
+  double maxVoltage;
+  for(int i = 0; i < sizeof(values); i+=5){
+    move_analog_motor(i, pin);
+    double compareVoltage = read_photoresistor();
+    
+    if (compareVoltage > maxVoltage){
+      maxVoltage = compareVoltage;
+      }
+    else{
+      break; 
+      }  
+    }
+  }
