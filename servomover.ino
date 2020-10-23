@@ -1,12 +1,13 @@
 #include <Servo.h>
 #include <conductivity.h>
+#include <Sleep_n0m1.h>
 #define Salinity1 A2;
 #define Salinity2 A3;
 #define Photo A5; // Sets the input sensor for the photoresistor as analog 5 (do not change)
 #define Solar A6;
 Servo rot_servo; // Arduinio IO port hook up 
 Servo log_servo; 
-
+Sleep sleep;
 
 void move_continious_motor (int degrees = 0, int pin = 9); // Function moves the location n degrees counterclockwise
 double read_photoresistor(); // Function reads the change in resistance caused by the presence of light
@@ -33,11 +34,13 @@ void setup() {
    int curDeg2 cont_sunlight_track(rot_degree_value, 9);
   for(int i = 0; i<= 5; i++){
    curDeg2 = cont_sunlight_track(curDeg2, 9);
+    sleep.pwrDownMode();
 }
 
 void loop() {
- 
-}  
+ sleep.sleepDelay(5000);
+  
+} 
 
 void move_continious_motor (int degrees, int pin){
   rot_servo.attach(pin);
