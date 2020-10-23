@@ -14,8 +14,7 @@ double read_photoresistor(); // Function reads the change in resistance caused b
 double read_solar();
 void read_salinity();
 int myCalibrationFunction(int raw);
-int log_sunlight_track(int log_degree_value, int pin =9);
-int cont_sunlight_track(int rot_degree_value, int pin=9);
+
 
 
 
@@ -25,16 +24,9 @@ void setup() {
   int log_pin_value = 10; // pin changed from 11 to 10 to reflect change in hardware port usage.
   int rot_degree_value = 31;
   int log_degree_value = 100;
+  sleep.pwrDownMode();
   move_continious_motor(rot_degree_value, rot_pin_value);
   move_analog_motor(log_degree_value, log_pin_value);
-  int curDeg = sunlight_track(log_degree_value, 9);
-  for(int i = 0; i <= 5; i++){
-   curDeg = cont_sunlight_track(curDeg, 9);
-  }
-   int curDeg2 cont_sunlight_track(rot_degree_value, 9);
-  for(int i = 0; i<= 5; i++){
-   curDeg2 = cont_sunlight_track(curDeg2, 9);
-    sleep.pwrDownMode();
 }
 
 void loop() {
