@@ -30,8 +30,14 @@ void setup() {
 }
 
 void loop() {
- sleep.sleepDelay(5000);
-  
+ 
+ void sunlight_track();
+  delay(2000);
+ // Salinty 1 Method
+  delay(2000);
+ //Salinty 2 Method
+  delay(2000);
+ sleep.sleepDelay(900000); //waits 15 minutes
 } 
 
 void move_continious_motor (int degrees, int pin){
