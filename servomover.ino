@@ -81,15 +81,16 @@ double read_solar(){
 
  void sunlight_track(){
   double maxVoltage;
-  for(int i = 0; i < sizeof(values); i+=5){
-    move_analog_motor(i, pin);
-    double compareVoltage = read_photoresistor();
+  for(int i = 0; i <= 180 ; i+=5){
+    move_analog_motor(i, 10);
+    delay(5000);
+    double compareVoltage = read_photoresitor();
     
     if (compareVoltage > maxVoltage){
       maxVoltage = compareVoltage;
       }
     else{
-      break; 
+     break;
       }  
     }
   }
