@@ -12,8 +12,8 @@ KNWRobot *myRobot;
 void setup() {
   myRobot = new KNWRobot();
   Serial.begin(9600); // This starts the Serial port allowing Octopus have a IO stream with laptop.
-  test_long();
-  
+  //move_analog_motor(0,10);
+  run_poland();
 
 }
 
@@ -21,10 +21,16 @@ void loop() {
 }  
 
 void run_russia(){
-  move_analog_motor(120,10);
+  move_analog_motor(120,11);
   read_salinity();
-  delay(1000);
+  move_analog_motor(0,10);
   
+}
+
+void run_poland(){
+  move_analog_motor(160,10); //on its own (not with akbar)
+  read_salinity();
+  move_analog_motor(0,10);
 }
  
   void move_analog_motor(int degrees, int pin){
@@ -50,15 +56,21 @@ double read_solar(){
  
 
  void read_salinity(){
-    int probeReading = getConductivity();
-    Serial.println(myCalibrationFunction(probeReading));
+    double probeReading = getConductivity();
+    double out = myCalibrationFunction(probeReading);
+    Serial.println(out);
+    
+    
 
  }
 
- double myCalibrationFunction(double raw){
-    return raw;
+ double myCalibrationFunction(double adc){
+    double slope = 6.63;
+    double intercpet = 336;
+    double bottom = (adc-intercpet);
+    return slope/bottom;
  }
- void test(){
+ double test(){
   int adc,i;
   double mean;
   adc = 0;
@@ -68,7 +80,8 @@ double read_solar(){
   }
   mean = ((double) adc)/5.0;
   myRobot->clearLine(1);
-  Serial.println(mean);
+  return mean;
+  
  }
  void test_long(){
   move_analog_motor(100,10);
@@ -79,8 +92,6 @@ double read_solar(){
   delay(5000);
   move_analog_motor(100,10);
  }
-
-
   
 
 
