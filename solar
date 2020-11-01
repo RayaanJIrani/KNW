@@ -1,41 +1,42 @@
 #include <Servo.h>
+#include <conductivity.h>
+#include <Sleep_n0m1.h>
+#define Salinity1 A2;
+#define Salinity2 A3;
 #define Photo A5; // Sets the input sensor for the photoresistor as analog 5 (do not change)
 #define Solar A6;
 Servo rot_servo; // Arduinio IO port hook up 
 Servo log_servo; 
+Sleep sleep;
 
-void move_analog_motor(int degrees = 0, int pin = 9);
-void move_continious_motor (int degrees = 0, int pin = 9); // Function moves the location n degrees counterclockwise
+void move_continious_motor (int degrees = 0, int pin = 10); // Function moves the location n degrees counterclockwise
 double read_photoresistor(); // Function reads the change in resistance caused by the presence of light
 double read_solar();
+void read_salinity();
+int myCalibrationFunction(int raw);
+
+
 
 
 void setup() {
   Serial.begin(9600); // This starts the Serial port allowing Octopus have a IO stream with laptop.
   int rot_pin_value = 9;
   int log_pin_value = 10; // pin changed from 11 to 10 to reflect change in hardware port usage.
-  int rot_degree_value = 31;
+  int rot_degree_value = 90;
   int log_degree_value = 100;
-  move_continious_motor(rot_degree_value, rot_pin_value);
-  move_analog_motor(log_degree_value, log_pin_value);
+  sleep.pwrDownMode();
+ sunlight_track();
+  
 }
 
 void loop() {
-  Serial.print("Photoresistor value");
+    Serial.print("Photoresistor value");
   read_photoresitor();
   read_photoresitor();
   read_photoresitor();
-  delay(1000);
-  Serial.print("Solar Value");
-  read_solar();
-  read_solar();
-  read_solar();
-  read_solar();
-  read_solar();
-  delay(1000);
-
+  delay(3000);
  
-}  
+}
 
 void move_continious_motor (int degrees, int pin){
   rot_servo.attach(pin);
@@ -56,8 +57,7 @@ void move_continious_motor (int degrees, int pin){
   
   double read_photoresitor(){
     double light_level = analogRead(A5);
-    double voltage = light_level * (5/1024); // converts analog to voltage
-    Serial.print(voltage);
+    Serial.print(light_level);
     Serial.print("\n");
     return light_level;
  }
@@ -69,5 +69,44 @@ double read_solar(){
     return solar;
  }
 
-
+ void read_salinity(){
+  int conductivityReading = getConductivity();
+  int salinity = myCalibrationFunction(conductivityReading);
+  Serial.println("Salinity Reading:");
+  Serial.println(salinity);
+ 
  }
+
+ int myCalibrationFunction(int raw){
+    return raw; // holder 
+   
+ }
+
+ void sunlight_track(){
+  //add max value thing
+  double minVoltage = 1024;
+  int minVoltagei = 0;
+  for(int i = 0; i <= 180 ; i+=5){
+    move_analog_motor(i, 10);
+    delay(2000);
+    double compareVoltage1 = read_photoresitor();
+    delay(500);
+    double compareVoltage2 = read_photoresitor();
+    delay(500);
+    double compareVoltage3 = read_photoresitor();
+    delay(500);
+double compareVoltage = (compareVoltage1 + compareVoltage2 + compareVoltage3) / 3;
+Serial.print("At ");
+Serial.print(i);
+Serial.print(" Compare Voltage Average: ");  
+Serial.print(compareVoltage);
+Serial.print("\n");
+    if (compareVoltage < minVoltage){
+      minVoltage = compareVoltage;
+      minVoltagei = i;
+      }
+    
+      }  
+   move_analog_motor(minVoltagei, 10);
+    }
+ 
