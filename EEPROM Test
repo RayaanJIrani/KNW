@@ -1,0 +1,125 @@
+#include <Servo.h>
+#include <conductivity.h>
+#include <Sleep_n0m1.h>
+#include <EEPROM.h>
+#include <eepromhelper.h>
+#define Salinity1 A2;
+#define Salinity2 A3;
+#define Photo A5; // Sets the input sensor for the photoresistor as analog 5 (do not change)
+#define Solar A6;
+Servo log_servo; 
+Sleep sleep;
+void move_continious_motor (int degrees = 0, int pin = 10); // Function moves the location n degrees counterclockwise
+long read_photoresistor(); // Function reads the change in resistance caused by the presence of light
+long read_solar();
+void read_salinity();
+unsigned long time;
+const unsigned int BYTES_PER_LONG = sizeof(unsigned long);
+int eeAddress = 0;
+
+
+
+void setup() {
+  Serial.begin(9600); // This starts the Serial port allowing Octopus have a IO stream with laptop.
+  int rot_pin_value = 9;
+  int log_pin_value = 10; // pin changed from 11 to 10 to reflect change in hardware port usage.
+  int rot_degree_value = 90;
+  int log_degree_value = 100;
+  sleep.pwrDownMode();
+}
+
+void loop() {
+sunlight_track();
+time = millis();
+double reading = read_solar();
+appendLongValueToEEPROM(reading);
+appendLongValueToEEPROM(time);
+ 
+ 
+}
+
+
+  
+ 
+  void move_analog_motor(int degrees, int pin){
+    log_servo.attach(pin);
+    log_servo.write(degrees);
+}
+  
+  long read_photoresitor(){
+    double light_level = analogRead(A5);
+    Serial.print(light_level);
+    Serial.print("\n");
+    return light_level;
+ }
+long read_solar(){
+    long solar = analogRead(A6);
+    long voltage = solar * (5/1023.0); // converts analog to voltage
+    Serial.print(voltage);
+    Serial.print("\n");
+    return voltage;
+ }
+
+
+
+
+
+ void sunlight_track(){
+  //add max value thing
+  long minVoltage = 1024;
+  int minVoltagei = 0;
+  for(int i = 0; i <= 180 ; i+=5){
+    move_analog_motor(i, 10);
+    delay(1500);
+    long compareVoltage1 = read_photoresitor();
+    delay(500);
+    long compareVoltage2 = read_photoresitor();
+    delay(500);
+    long compareVoltage3 = read_photoresitor();
+    delay(500);
+long compareVoltage = (compareVoltage1 + compareVoltage2 + compareVoltage3) / 3;
+Serial.print("At ");
+Serial.print(i);
+Serial.print(" Compare Voltage Average: ");  
+Serial.print(compareVoltage);
+Serial.print("\n");
+    if (compareVoltage < minVoltage){
+      minVoltage = compareVoltage;
+      minVoltagei = i;
+      }
+    
+      }  
+   move_analog_motor(minVoltagei, 10);
+    }
+ float appendLongValueToEEPROM(unsigned value) {
+ unsigned int nextAvailableAddress = (getCountOfDataSamples() * BYTES_PER_LONG) + BYTES_FOR_SAMPLE_COUNTER;
+  setLongValueAtAddress(nextAvailableAddress, value);
+  incrementCountOfDataSamples();
+  return nextAvailableAddress;
+}
+
+long setLongValueAtAddress(unsigned int address, unsigned long value) {
+  EEPROM.put(address, value);
+  return value;
+}
+int getLongValueAtAddress(unsigned long address) {
+  long value = 0;
+  EEPROM.get(address, value);
+  return value;
+}
+void showContentsOfEEPROM(){
+unsigned int i = 0;
+unsigned int count = getCountOfDataSamples();
+unsigned int address;
+while (i < count){
+  address = (BYTES_PER_LONG * i) + BYTES_FOR_SAMPLE_COUNTER;
+  long solarReading = getLongValueAtAddress(address);
+  Serial.print(solarReading);
+  Serial.print(", ");
+  i++;
+  address = (BYTES_PER_LONG * i) + BYTES_FOR_SAMPLE_COUNTER;
+  long timeStamp = getLongValueAtAddress(address);
+  Serial.print(timeStamp);
+  Serial.print("\n");
+  }
+}
