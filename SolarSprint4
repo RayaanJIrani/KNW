@@ -1,0 +1,125 @@
+#include <Servo.h>
+#include <Sleep_n0m1.h>
+#include <EEPROM.h>
+#define Photo A5; // Sets the input sensor for the photoresistor as analog 5 (do not change)
+#define Solar A6;
+
+Sleep sleep;
+int read_solar();
+double read_photoresistor(int pin);
+unsigned long time;
+int sleepLogger = 0;
+Servo log_servo;
+
+  void setup() {
+    Serial.begin(9600); // This starts the Serial port allowing Octopus have a IO stream with laptop.
+   // move_analog_motor();
+   // move_analog_motor();
+
+    //runSolarSystem();
+  }
+
+  void loop() {
+ 
+
+
+
+  }
+
+  void runSolarSystem(){
+    double timeInMins = 0;
+    for(int i = 0; i < 12; i++){
+      //solar_orient() add parameters 
+      time= millis();
+      timeInMins = time / 60000; 
+      int solar = read_solar();
+      setEEPROMVal(2*i, timeInMins);
+      setEEPROMVal(2*i + 1, solar);
+      sleep.sleepDelay(600001);
+    }
+   }
+
+  unsigned long getEEPROMVal(int index){
+    unsigned long output = 0;
+    output = EEPROM[2*index] * 256 + EEPROM[2*index+1];
+    return output;
+  }
+
+
+
+  void setEEPROMVal(int index, int val){
+    int firstNum = val / 256;
+    int secondNum = val % 256;
+    EEPROM[index*2] = firstNum;
+    EEPROM[index*2 + 1] = secondNum;
+  }
+
+
+
+  int read_solar(){
+      double solar = analogRead(A6);
+      double voltage = solar * (5.0/1024.0); // converts analog to voltage
+      return (int)(voltage * 100);
+ }
+
+  void move_analog_motor(int degrees, int pin){
+      log_servo.attach(pin);
+      log_servo.write(degrees);
+ }
+
+  double  read_photoresistor(int pin){
+      double light_level1 = analogRead(pin);
+      double light_level2 = analogRead(pin);
+      double light_level3 = analogRead(pin);
+      double light_level = (light_level1 + light_level2 + light_level3) / 3.0;
+      return light_level;
+ }
+
+
+
+  void solar_orient(int pin1, int pin2, int pin3, int pin4, int basePin, int solarPin, int curDegBase, int curDegSolar){
+    double photo_vals[4] = {read_photoresistor(pin1), read_photoresistor(pin2), read_photoresistor(pin3), read_photoresistor(pin4)};
+    double max_value = 0;
+    double min_value = 1024;
+    for(int i=0; i < 4; i++){
+        if(photo_vals[i] < min_value){
+            min_value = photo_vals[i];
+        }
+        if(photo_vals[i] > max_value){
+            max_value = photo_vals[i];
+        }
+      }
+      double diffPer = 100 * (max_value - min_value) / ((max_value + min_value) / 2 ) ;
+    if(diffPer < 5){
+      return;
+      }
+    double topAvg = (photo_vals[0] + photo_vals[1]) / 2.0;
+    double botAvg = (photo_vals[2] + photo_vals[3]) / 2.0;
+    double leftAvg = (photo_vals[0] + photo_vals[2]) / 2.0;
+    double rightAvg = (photo_vals[1] + photo_vals[3]) / 2.0;
+    double upDiff = abs(topAvg - botAvg);
+    double leftDiff = abs(leftAvg - rightAvg);
+    if(upDiff > leftDiff){
+            if(topAvg > botAvg){
+           curDegSolar += 5;   
+              }
+            else if(botAvg > topAvg){
+          curDegSolar -= 5;
+              }
+    move_analog_motor(solarPin, curDegSolar);
+        }
+    else if(leftDiff > upDiff){
+            if(leftAvg > rightAvg){
+           curDegSolar += 5;   
+              }
+            else if(leftAvg > rightAvg){
+          curDegSolar -= 5;
+              }
+    move_analog_motor(basePin, curDegBase);
+        }
+
+  solar_orient(pin1, pin2, pin3, pin4, basePin, solarPin, curDegBase, curDegSolar);
+  }
+
+ 
+ 
