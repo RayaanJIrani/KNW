@@ -1,0 +1,25 @@
+#include <EEPROM.h>
+
+void setup() {
+  //miles' solar pannel varies quite quickly
+Serial.begin(9600);
+Serial.println("Time,Solar Reading");
+for (int i = 0;  i < 12; i++){
+Serial.print(getEEPROMVal(2*i));
+Serial.print(",");
+Serial.print(getEEPROMVal(2*i+1));
+Serial.println(",");
+
+}
+}
+
+void loop() {
+
+}
+
+
+int getEEPROMVal(int index){
+  int output = 0;
+  output = EEPROM[2*index] * 256 + EEPROM[2*index+1];
+  return output;
+  }
