@@ -1,0 +1,85 @@
+
+#include <Servo.h>
+#include <conductivity.h>
+#include <KNWRobot.h>
+#include <Sleep_n0m1.h> 
+#include <EEPROM.h>
+
+Servo log_servo; 
+KNWRobot *myRobot;
+Sleep sleep;
+unsigned long time = 0;
+int sleep_logger = 0;
+
+void setup() {
+  myRobot = new KNWRobot();
+  Serial.begin(9600); // This starts the Serial port allowing Octopus have a IO stream with laptop.
+  //move_analog_motor(132,11);
+ // move_analog_motor(0,11);
+ // Serial.println(myRobot->getConductivity());
+ // Serial.println(myRobot->getConductivity());
+ // Serial.println(myRobot->getConductivity());
+  Serial.println("0.0001");
+}
+
+void loop() {
+}  
+
+
+ 
+  void move_analog_motor(int degrees, int pin){
+    log_servo.attach(pin);
+    log_servo.write(degrees);
+}
+  
+ int read_salinity(){
+    double probeReading = getConductivity();
+    return probeReading;
+ }
+
+ double myCalibrationFunction(int adc){ //TODO fix this!!!
+  /*
+    double slope = 6.63;
+    double intercpet = 336;
+    double bottom = (adc-intercpet);
+    return slope/bottom;
+    */ 
+    return adc;
+ }
+ unsigned long getEEPROMVal(int index){
+    unsigned long output = 0;
+    output = EEPROM[2*index] * 256 + EEPROM[2*index+1];
+    return output;
+  }
+  
+  void setEEPROMVal(int index, int val){
+    int firstNum = val / 256;
+    int secondNum = val % 256;
+    EEPROM[index*2] = firstNum;
+    EEPROM[index*2 + 1] = secondNum;
+  }
+
+ void read_data(int num_cycles){
+  Serial.println("Time,Solar Reading");
+    for (int i = 0;  i < num_cycles; i++){
+    Serial.print(getEEPROMVal(2*i));
+    Serial.print(",");
+    int adc_val = getEEPROMVal(2*i+1);
+    Serial.print(myCalibrationFunction(adc_val));
+    Serial.println(",");
+  }
+ }
+
+ void run_salinity(int num_cycles){
+  double timeInMins = 0;
+    for(int i = 0; i < num_cycles; i++){
+      int salinity = read_salinity();
+      time = millis();
+      timeInMins = time / 60000; 
+      setEEPROMVal(2*i, timeInMins);
+      setEEPROMVal(2*i + 1, salinity);
+      sleep.sleepDelay(60001);
+    }
+ }
+
+ 
