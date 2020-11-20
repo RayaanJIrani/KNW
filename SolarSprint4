@@ -110,10 +110,10 @@ Servo log_servo;
         }
     else if(leftDiff > upDiff){
             if(leftAvg > rightAvg){
-           curDegSolar += 5;   
+           curDegBase += 5;   
               }
             else if(leftAvg > rightAvg){
-          curDegSolar -= 5;
+          curDegBase -= 5;
               }
     move_analog_motor(basePin, curDegBase);
         }
