@@ -1,8 +1,11 @@
 #include <Servo.h>
 #include <Sleep_n0m1.h>
 #include <EEPROM.h>
+Servo base_servo; // Arduinio IO port hook up 
+Servo panel_servo; 
 #define Photo A5; // Sets the input sensor for the photoresistor as analog 5 (do not change)
 #define Solar A6;
+
 
 Sleep sleep;
 int read_solar();
@@ -78,16 +81,17 @@ Servo log_servo;
 
 
   void solar_orient(int pin1, int pin2, int pin3, int pin4, int basePin, int solarPin){
-  
+    base_servo.attach(basePin);
+    panel_servo.attach(solarPin);
     double min_value = 1024;
     double min_deg = 0;
     double min_value2 = 1024;
     double min_deg2 = 0;
     double avg = photo_vals[0] + photo_vals[1] + photo_vals[2] + photo_vals[3]) / 4.0;
-   //base call move_analog_motor(0, basePin);
-  //solar call  move_analog_motor(0, solarPin);
+    base_servo.write(0);
+    solar_servo.write(0);
     for (i = 0; i < 180; i += 5){
-   //base call  move_analog_motor(i, basePin);
+     base_servo.write(i);
      double photo_vals[4] = {read_photoresistor(pin1), read_photoresistor(pin2), read_photoresistor(pin3), read_photoresistor(pin4)};
      double avg = photo_vals[0] + photo_vals[1] + photo_vals[2] + photo_vals[3]) / 4.0;
      if (avg < min_value){
@@ -95,10 +99,10 @@ Servo log_servo;
      min_deg = i;
      }
     }
-//base call move_analog_motor(min_deg, basePin);
+    base_servo.write(min_deg);
  
   for(i = 0; i < 180; i +=5){
-  //solar call move_analog_motor(i, solarPin);
+     solar_servo.write(i);
      double photo_vals[4] = {read_photoresistor(pin1), read_photoresistor(pin2), read_photoresistor(pin3), read_photoresistor(pin4)};
      double avg = photo_vals[0] + photo_vals[1] + photo_vals[2] + photo_vals[3]) / 4.0;
      if (avg < min_value2){
@@ -106,7 +110,7 @@ Servo log_servo;
      min_deg2 = i;
      }
     }
- //solar call move_analog_motor(min_deg2, solarPin); 
+  solar_servo.write(min_deg2);
 
   }
 
