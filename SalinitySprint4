@@ -14,12 +14,11 @@ int sleep_logger = 0;
 void setup() {
   myRobot = new KNWRobot();
   Serial.begin(9600); // This starts the Serial port allowing Octopus have a IO stream with laptop.
-  //move_analog_motor(132,11);
- // move_analog_motor(0,11);
- // Serial.println(myRobot->getConductivity());
- // Serial.println(myRobot->getConductivity());
- // Serial.println(myRobot->getConductivity());
-  Serial.println("0.0001");
+  //run_salinity() simply insert parameters 
+  // num_cycles == number of times the salintiy should go up and down
+  // from == the degree that you want the salinity arm to return to
+  // to == the degree that you want the salinity arm to go to when reading
+  // Please note: for this to work properly you must put the salintity at an angle.
 }
 
 void loop() {
@@ -32,8 +31,10 @@ void loop() {
     log_servo.write(degrees);
 }
   
- int read_salinity(){
-    double probeReading = getConductivity();
+ int read_salinity(int from, int to, int pin){
+    move_analog_motor(to, pin);
+    int probeReading = getConductivity();
+    move_analog_motor(from, pin);
     return probeReading;
  }
 
@@ -70,10 +71,10 @@ void loop() {
   }
  }
 
- void run_salinity(int num_cycles){
+ void run_salinity(int num_cycles, int from, int to, int pin){
   double timeInMins = 0;
     for(int i = 0; i < num_cycles; i++){
-      int salinity = read_salinity();
+      int salinity = read_salinity(from, to, pin);
       time = millis();
       timeInMins = time / 60000; 
       setEEPROMVal(2*i, timeInMins);
