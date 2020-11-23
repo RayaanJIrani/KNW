@@ -41,6 +41,7 @@ Servo log_servo;
       int solar = read_solar();
       setEEPROMVal(2*i, timeInMins);
       setEEPROMVal(2*i + 1, solar);
+      sleep.sleepDelay(570000);
       }
       else{
       time= millis();
