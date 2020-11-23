@@ -35,15 +35,23 @@ Servo log_servo;
     double timeInMins = 0;
     for(int i = 0; i < 48; i++){
      if(i % 3 == 0){
-      solar_orient() 
-      }
+      solar_orient();
       time= millis();
       timeInMins = time / 60000; 
       int solar = read_solar();
       setEEPROMVal(2*i, timeInMins);
       setEEPROMVal(2*i + 1, solar);
-      sleep.sleepDelay(600001);
+      }
+      else{
+      time= millis();
+      timeInMins = time / 60000; 
+      int solar = read_solar();
+      setEEPROMVal(2*i, timeInMins);
+      setEEPROMVal(2*i + 1, solar);
+      sleep.sleepDelay(600000);
+      }  
     }
+    
    }
 
   unsigned long getEEPROMVal(int index){
